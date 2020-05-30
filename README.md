@@ -49,6 +49,19 @@ $ sbt test
 | Purely functional program | Almost | Not all `effects` are handled (eg. unsafe `String` to `Int` conversion) |
 | Tests | Yes | `cats-laws` + `solution` tests |
 
+## Assumptions
+
+1. Program doesn't parse headers, so if they will be permutated (e.g. `humidity` first, `sensor-id` seconds) it will inevitably fail.
+1. When any entry within daily report file doesn't follow the convention `<sensor-id>,(\d+)` (achieved as combination of `String` splitting and regex matching) program will report such line as one associated with sensor identified by `measure-error` id.
+1. Since program cannot write results to a database/disk it means that total amount of sensors (and their aggregated data) should fit in a memory, therefore `Map` structure was used in order to aggregate results.
+
+## Area for improvement
+
+1. Better error handling. For now it doesn't exist but it seems that nothing is thrown.
+1. Better `NaN` handling. For now it was done in a dirty way, utilizing `Option` type. It works but it is a little bit nasty code. Maybe ADT would make this code better but...
+1. In case of a large files, GC overhead may be significant. Program maps each line to some case classes and such objects creation may cause performance issues.
+1. Better console output - colors etc.
+
 
 # Sensor Statistics Task
 
