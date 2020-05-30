@@ -69,6 +69,7 @@ $ sbt test
 1. Better `NaN` handling. For now it was done in a dirty way, utilizing `Option` type. It works but it is a little bit nasty code. Maybe ADT would make this code better but...
 1. In case of a large files, GC overhead may be significant. Program maps each line to some case classes and such objects creation may cause performance issues.
 1. Better console output - colors etc.
+1. Setup sbt compiler flags.
 
 
 # Sensor Statistics Task

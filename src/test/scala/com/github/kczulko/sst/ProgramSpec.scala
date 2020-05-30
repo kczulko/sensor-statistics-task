@@ -1,11 +1,10 @@
 package com.github.kczulko.sst
 
+import cats.effect.{ContextShift, IO}
+
+import org.scalatest.Resources
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.Resources
-import cats.effect.ContextShift
-import cats.effect.ConcurrentEffect
-import cats.effect.IO
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
