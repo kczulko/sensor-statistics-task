@@ -43,15 +43,23 @@ $ sbt test
 
 | Requirement | Implemented? | Comment |
 | :--- | :---: | :--- |
+| Program prints statistics to StdOut| Yes | - |
+| It reports how many files it processed | Yes | - |
+| It reports how many measurements it processed | Yes | - |
+| It reports how many measurements failed | Yes | - |
+| For each sensor it calculates min/avg/max humidity | Yes | - |
+| `NaN` values are ignored from min/avg/max | Yes | - |
+| Sensors with only `NaN` measurements have min/avg/max as `NaN/NaN/NaN` | Yes | - |
+| Program sorts sensors by highest avg humidity (`NaN` values go last) | Yes | - |
 | Safely read large files | Yes | Achieved with `fs2.io.file.readAll` |
 | No disk/database writes | Yes | - |
 | No Spark dependency     | Yes | Combination of \[`fs2` \| `cats`\|`Monoid`\|`Semigroup`\] |
-| Purely functional program | Almost | Not all `effects` are handled (eg. unsafe `String` to `Int` conversion) |
+| Purely functional program | Almost | Not all `effects` are handled (e.g. unsafe `String` to `Int` conversion) |
 | Tests | Yes | `cats-laws` + `solution` tests |
 
 ## Assumptions
 
-1. Program doesn't parse headers, so if they will be permutated (e.g. `humidity` first, `sensor-id` seconds) it will inevitably fail.
+1. Program doesn't parse headers, so in case of permutation (e.g. `humidity` first, `sensor-id` second) it will inevitably fail - no exceptions but it won't show meaningful results.
 1. When any entry within daily report file doesn't follow the convention `<sensor-id>,(\d+)` (achieved as combination of `String` splitting and regex matching) program will report such line as one associated with sensor identified by `measure-error` id.
 1. Since program cannot write results to a database/disk it means that total amount of sensors (and their aggregated data) should fit in a memory, therefore `Map` structure was used in order to aggregate results.
 
@@ -106,7 +114,7 @@ s1,98
 
 - Program prints statistics to StdOut
 - It reports how many files it processed
-- It reports how many measurements itttttt. processed
+- It reports how many measurements it processed
 - It reports how many measurements failed
 - For each sensor it calculates min/avg/max humidity
 - `NaN` values are ignored from min/avg/max
