@@ -42,10 +42,10 @@ $ sbt test
 ## Requirements
 
 | Requirement | Implemented? | Comment |
-| :---: | :---: | :---: |
-| Safely read large files | Yes | Achieved with `fs2.io.readAll` |
+| :--- | :---: | :--- |
+| Safely read large files | Yes | Achieved with `fs2.io.file.readAll` |
 | No disk/database writes | Yes | - |
-| No Spark dependency     | Yes | Combination of [`fs2`|`cats`|`Monoid`|`Semigroup`] |
+| No Spark dependency     | Yes | Combination of \[`fs2` \| `cats`\|`Monoid`\|`Semigroup`\] |
 | Purely functional program | Almost | Not all `effects` are handled (eg. unsafe `String` to `Int` conversion) |
 | Tests | Yes | `cats-laws` + `solution` tests |
 
