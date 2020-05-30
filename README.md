@@ -1,3 +1,55 @@
+# Solution
+
+## Execution
+
+### Program
+
+#### nix
+
+From project root directory:
+
+```bash
+$ nix-shell --pure --run "sbt \"run <directory>\""
+```
+
+#### sbt
+
+From project root directory:
+
+```bash
+$ sbt "run <directory>"
+```
+
+### Tests
+
+
+#### nix
+
+From project root directory:
+
+```bash
+$ nix-shell --pure --run "sbt test"
+```
+
+#### sbt
+
+From project root directory:
+
+```bash
+$ sbt test
+```
+
+## Requirements
+
+| Requirement | Implemented? | Comment |
+| :---: | :---: | :---: |
+| Safely read large files | Yes | Achieved with `fs2.io.readAll` |
+| No disk/database writes | Yes | - |
+| No Spark dependency     | Yes | Combination of [`fs2`|`cats`|`Monoid`|`Semigroup`] |
+| Purely functional program | Almost | Not all `effects` are handled (eg. unsafe `String` to `Int` conversion) |
+| Tests | Yes | `cats-laws` + `solution` tests |
+
+
 # Sensor Statistics Task
 
 Create a command line program that calculates statistics from humidity sensor data.
