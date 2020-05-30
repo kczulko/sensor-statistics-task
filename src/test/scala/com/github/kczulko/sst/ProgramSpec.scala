@@ -21,6 +21,7 @@ class ProgramSpec extends AnyFlatSpec
   ): ResultInterpreter.ResultInterpreter[IO] = {
     case (numOfFiles, results) =>
 
+      // TODO: code duplication!
       val programResults = results.mapValues { value =>
         val data = value
           .data
