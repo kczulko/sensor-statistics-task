@@ -98,8 +98,17 @@ object Main extends IOApp {
 
   def consoleInterpreter[F[_]: Sync]: ResultInterpreter[F] = {
     case (numberOfFiles, result) =>
+      val numberOfSensorReports = 10
       val processedMeasurements = result.values.map(_.measurementsCount).reduce(_ + _)
       val failedMeasurements = result.values.map(_.failedCount).reduce(_ + _)
+      val highestAvgHumidity = result.toSeq.sortBy {
+        case (_, measurement) => measurement.data.fold(Float.MinValue)(_.avg)
+      }(Ordering[Float].reverse)
+        .take(numberOfSensorReports)
+        .map {
+          case (sensorId, measurement) =>
+            s"$sensorId,${measurement.data.fold("Nan")(_.avg.toString())}"
+        }.mkString("\n")
 
       val resultMsg = s"""
         |Num of processed files: $numberOfFiles
@@ -107,7 +116,7 @@ object Main extends IOApp {
         |Num of failed measurements: $failedMeasurements
         |
         |Sensors with highest avg humidity:
-        |
+        |$highestAvgHumidity
       """.stripMargin
 
       Sync[F].delay(println(resultMsg))
