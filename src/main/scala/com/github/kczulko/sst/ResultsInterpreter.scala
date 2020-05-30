@@ -1,7 +1,7 @@
 package com.github.kczulko.sst
 
-import cats.effect.Sync
 import cats.Foldable
+import cats.effect.Sync
 import cats.kernel.Monoid
 import cats.instances.list._
 import cats.instances.long._

@@ -6,7 +6,7 @@ import cats.kernel.laws.discipline.SemigroupTests
 
 import org.scalacheck.ScalacheckShapeless._
 
-class MeasurementStateSemigroupLaws extends CatsSuite {
+class SensorMeasurementsSemigroupLaws extends CatsSuite {
 
   implicit val eq: Eq[SensorMeasurements] = Eq.allEqual
 
