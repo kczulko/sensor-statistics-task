@@ -18,7 +18,7 @@ class ProgramSpec extends AnyFlatSpec
   def testInterpreter(
     expectedNumberOfProcessedFiles: Int,
     expectedResults: Map[String,SensorMeasurements]
-  ): ResultsInterpreter.ResultInterpreter[IO] = {
+  ): ResultInterpreter.ResultInterpreter[IO] = {
     case (numOfFiles, results) =>
 
       val programResults = results.mapValues { value =>
@@ -44,10 +44,11 @@ class ProgramSpec extends AnyFlatSpec
     "program[F]" should s"properly analyze ${params.suiteName}" in {
       import params._
 
-      Main.program[IO](
+      App[IO](
         s"src/test/resources/${params.suiteName}",
         testInterpreter(expectedNumberOfFiles, expectedResults)
-      ).compile
+      ).program
+       .compile
        .drain
        .unsafeRunSync()
     }

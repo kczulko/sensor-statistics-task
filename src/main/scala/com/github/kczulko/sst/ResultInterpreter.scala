@@ -6,7 +6,7 @@ import cats.kernel.Monoid
 import cats.instances.list._
 import cats.instances.long._
 
-object ResultsInterpreter {
+object ResultInterpreter {
 
   type ResultInterpreter[F[_]] = (Int, Map[String, SensorMeasurements]) => F[Unit]
 
