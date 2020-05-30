@@ -25,7 +25,14 @@ object ResultsInterpreter {
         .take(numberOfSensorReports)
         .map {
           case (sensorId, measurement) =>
-            s"$sensorId,${measurement.data.fold(StringConstants.NaN)(_.avg.toString())}"
+            lazy val nans = List.fill(3)(StringConstants.NaN)
+              .mkString(StringConstants.comma)
+            val stats = measurement
+              .data
+              .map(data => s"${data.min},${data.avg},${data.max}")
+              .getOrElse(nans)
+
+            s"$sensorId,$stats"
         }.mkString(StringConstants.newline)
 
       val outputMsg = s"""
@@ -34,6 +41,8 @@ object ResultsInterpreter {
         |Num of failed measurements: $failedMeasurements
         |
         |Sensors with highest avg humidity:
+        |
+        |sensor-id,min,avg,max
         |$highestAvgHumidity
       """.stripMargin
 
