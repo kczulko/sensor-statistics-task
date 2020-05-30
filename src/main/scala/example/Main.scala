@@ -66,14 +66,14 @@ object MeasurementState {
 }
 
 object Main extends IOApp {
-  
+
   val validHumidity = raw"(\d+)".r
 
   val toMeasurementEntry: String => MeasurementEntry = _.split(",").toList match {
     case sensorId :: ("nan" | "Nan") :: _ => MeasurementEntry(sensorId, None)
     case sensorId :: measurement :: _ if validHumidity.matches(measurement) =>
       MeasurementEntry(sensorId, Some(measurement.toInt))
-    case _ => MeasurementEntry("measure error", None)
+    case _ => MeasurementEntry("measure-error", None)
   }
 
   val toMeasurementState: MeasurementEntry => Map[String, MeasurementState] = {
@@ -92,7 +92,31 @@ object Main extends IOApp {
     )
   }
 
-  def program[F[_]: Concurrent: ContextShift](directory: String): Stream[F, Unit] = {
+  type ResultInterpreter[F[_]] = (Int, Map[String,MeasurementState]) => F[Unit]
+
+  import cats.syntax.foldable._
+
+  def consoleInterpreter[F[_]: Sync]: ResultInterpreter[F] = {
+    case (numberOfFiles, result) =>
+      val processedMeasurements = result.values.map(_.measurementsCount).reduce(_ + _)
+      val failedMeasurements = result.values.map(_.failedCount).reduce(_ + _)
+
+      val resultMsg = s"""
+        |Num of processed files: $numberOfFiles
+        |Num of processed measurements: $processedMeasurements
+        |Num of failed measurements: $failedMeasurements
+        |
+        |Sensors with highest avg humidity:
+        |
+      """.stripMargin
+
+      Sync[F].delay(println(resultMsg))
+  }
+
+  def program[F[_]: Concurrent: ContextShift](
+    directory: String,
+    resultsInterpreter: ResultInterpreter[F]
+  ): Stream[F, Unit] = {
     val header = 1
     val chunkSize = 4096
 
@@ -115,11 +139,14 @@ object Main extends IOApp {
         )
     } yield fileStream
 
-    streams.parJoinUnbounded.foldMonoid.map(println)
+    streams
+      .parJoinUnbounded
+      .foldMonoid
+      .evalMap(resultsInterpreter(csvPaths.size, _))
   }
 
   override def run(args: List[String]): IO[ExitCode] =
     args.headOption.fold(ExitCode.Error.pure[IO]) {
-      program[IO](_).compile.drain.as(ExitCode.Success)
+      program[IO](_, consoleInterpreter).compile.drain.as(ExitCode.Success)
     }
 }
