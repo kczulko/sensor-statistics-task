@@ -70,6 +70,8 @@ $ sbt test
 1. In case of a large files, GC overhead may be significant. Program maps each line to some case classes and such objects creation may cause performance issues.
 1. Better console output - colors etc.
 1. Setup sbt compiler flags.
+1. Move hardcoded values to config file (e.g. chunk size).
+1. Add logger.
 
 
 # Sensor Statistics Task
