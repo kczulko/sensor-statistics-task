@@ -20,21 +20,22 @@ final case class App[F[_]: ContextShift: Concurrent](
 
   val toMeasurementEntry: String => MeasurementEntry = _.split(StringConstants.comma).toList match {
     case sensorId :: StringConstants.NaN :: _ => MeasurementEntry(sensorId, None)
-    case sensorId :: measurement :: _ if validHumidity.matches(measurement) =>
-      MeasurementEntry(sensorId, Some(measurement.toInt))
+    case sensorId :: validHumidity(value) :: _ =>
+      MeasurementEntry(sensorId, Some(value.toInt))
     case _ => MeasurementEntry(StringConstants.measureError, None)
   }
 
   val toSensorMeasurements: MeasurementEntry => Map[String, SensorMeasurements] = {
-    case MeasurementEntry(sensorId, Some(humidity)) =>
+    case MeasurementEntry(sensorId, humidityOpt) =>
+      val error = 0
+      val valid = 1
       Map(
         sensorId -> SensorMeasurements(
-          Some(MeasurementState(humidity, humidity, humidity, humidity)), 0, 1
+          data = humidityOpt.map(h => MeasurementState(h, h, h, h)),
+          failedCount = humidityOpt.fold(error)(_ => valid),
+          totalMeasurements = 1
         )
       )
-    case MeasurementEntry(sensorId, _) => Map(
-      sensorId -> SensorMeasurements(None, 1, 1)
-    )
   }
 
   def program: Stream[F,Unit] = {
