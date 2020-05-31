@@ -53,7 +53,7 @@ $ sbt test
 | Program sorts sensors by highest avg humidity (`NaN` values go last) | Yes | - |
 | Safely read large files | Yes | Achieved with `fs2.io.file.readAll` |
 | No disk/database writes | Yes | - |
-| No Spark dependency     | Yes | Combination of \[`fs2` \| `cats`\|`Monoid`\|`Semigroup`\] |
+| No Spark dependency     | Yes | Combination of \[`fs2` \| `cats` \| `Monoid` \| `Semigroup`\] |
 | Purely functional program | Almost | Not all `effects` are handled (e.g. unsafe `String` to `Int` conversion) |
 | Tests | Yes | `cats-laws` + `solution` tests |
 
