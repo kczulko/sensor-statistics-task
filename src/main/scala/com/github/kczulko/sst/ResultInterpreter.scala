@@ -29,7 +29,7 @@ object ResultInterpreter {
               .mkString(StringConstants.comma)
             val stats = measurement
               .data
-              .map(data => s"${data.min},${data.avg},${data.max}")
+              .map(data => s"${data.min},${math.round(data.avg)},${data.max}")
               .getOrElse(nans)
 
             s"$sensorId,$stats"

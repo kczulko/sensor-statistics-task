@@ -25,7 +25,7 @@ trait ProgramSpecExpectedResults {
     1,
     Map(
       "3" -> SensorMeasurements(Some(MeasurementState(0, 10, 10, 10)), 0, 1),
-      "measure-error" -> SensorMeasurements(None, 2, 2)
+      StringConstants.measureError -> SensorMeasurements(None, 2, 2)
     )
   )
 
@@ -54,7 +54,7 @@ trait ProgramSpecExpectedResults {
     Map(
       "1" -> SensorMeasurements(Some(MeasurementState(0, 50, 60, 55)), 0, 2),
       "2" -> SensorMeasurements(Some(MeasurementState(0, 50, 80, 66.666664f)), 0, 3),
-      "measure-error" -> SensorMeasurements(None, 4, 4),
+      StringConstants.measureError -> SensorMeasurements(None, 4, 4),
     )
   )
 

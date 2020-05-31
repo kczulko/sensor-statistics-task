@@ -22,7 +22,7 @@ final case class App[F[_]: ContextShift: Concurrent](
     case sensorId :: StringConstants.NaN :: _ => MeasurementEntry(sensorId, None)
     case sensorId :: measurement :: _ if validHumidity.matches(measurement) =>
       MeasurementEntry(sensorId, Some(measurement.toInt))
-    case _ => MeasurementEntry("measure-error", None)
+    case _ => MeasurementEntry(StringConstants.measureError, None)
   }
 
   val toSensorMeasurements: MeasurementEntry => Map[String, SensorMeasurements] = {

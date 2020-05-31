@@ -6,5 +6,6 @@ object StringConstants {
   val csvExtension = ".csv"
   val comma = ","
   val newline = "\n"
+  val measureError = "measure-error"
 
 }
